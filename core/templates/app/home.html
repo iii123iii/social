@@ -1,0 +1,249 @@
+{% extends 'bases/home.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block screenHead %}
+<style>
+    .screenAdj {
+        overflow: hidden;
+    }
+
+    .screenContainer::-webkit-scrollbar {
+        display: none;
+    }
+
+    .screenContainer {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        background-color: #f4f4f4;
+        min-height: 95vh;
+        overflow-y: scroll;
+    }
+
+    .posts {
+        display: grid;
+        overflow-y: scroll;
+        width: 100%;
+        max-height: 100%;
+        box-sizing: border-box;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        justify-items: center;
+        align-content: stretch;
+        grid-gap: 45px;
+    }
+
+
+    .posts::-webkit-scrollbar {
+        display: none;
+    }
+
+    .post {
+        background-color: #8d8d8d;
+        border-radius: 10px;
+
+
+        height: 400px;
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+
+    @media (max-width: 650px) {
+        .posts {
+            align-content: center;
+        }
+    }
+
+    @media (max-width: 920px) {
+        .posts {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            width: 100%;
+            max-height: calc(95vh - 80px);
+            box-sizing: border-box;
+            padding-bottom: 10px;
+        }
+
+        .post {
+            max-width: 400px;
+            flex-shrink: 0;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 600px) {
+            .posts {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                width: 100%;
+                max-height: 100vh;
+                box-sizing: border-box;
+                padding-bottom: 10px;
+            }
+
+        }
+    }
+
+    .addPost {
+
+        display: none;
+    }
+
+    .screenContainer {
+        height: 95vh;
+        padding: 30px;
+
+    }
+
+
+    @media (min-width: 920px) {
+        .posts {
+            justify-items: start;
+            height: 96vh;
+        }
+
+        .screenContainer {
+            padding: 30px;
+        }
+
+        .addPost {
+            border-radius: 12px;
+            position: sticky;
+            height: calc(100vh - 200px);
+            width: 700px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .addPostI {
+            display: grid;
+            justify-content: space-around;
+        }
+
+        .addPostInput {
+            padding: 10px;
+        }
+
+        .addPostI {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            justify-items: center;
+        }
+
+        .addPostInput,
+        .textareaA {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 320px;
+            border: black 1px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4px;
+            height: 20px;
+        }
+
+        .textareaA {
+            height: 260px;
+            resize: none;
+
+        }
+
+        .buttonA {
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            height: 40px;
+            width: 100%;
+        }
+
+        .buttonA:hover {
+            background-color: black;
+        }
+
+        .UserText {
+            color: blue;
+            margin-left: 15px;
+        }
+
+        .dividerDiv {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .divider {
+            height: 1px;
+            width: 98%;
+            background-color: black;
+        }
+
+    }
+</style>
+{% endblock %}
+
+{% block screen %}
+
+<div class="screenContainer">
+
+    <div class="posts">
+        <div class="post">
+            <div>
+                <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+                    <span class="UserText">User</span>
+                    <span style="margin-right: 15px;">November 1, 14:34</span>
+
+                </div>
+                <div style="margin-right: 20px; margin-left: 15px; margin-top: 6px;">
+                    <span>This is the title</span>
+
+                </div>
+
+                <div class="dividerDiv">
+                    <div class="divider">
+
+                    </div>
+                </div>
+
+
+                <div>
+
+                </div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div class="post"></div>
+        <div class="post"></div>
+        <div class="post"></div>
+        <div class="post"></div>
+        <div class="post"></div>
+        <div class="post"></div>
+        <div class="post"></div>
+
+    </div>
+    <div class="addPost">
+        <div class="addPostI">
+            <input type="text" class="addPostInput" placeholder="Enter your post title">
+            <textarea class="textareaA" placeholder="Enter your post content"></textarea>
+            <button class="buttonA">Post</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

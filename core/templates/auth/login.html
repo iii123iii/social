@@ -1,0 +1,239 @@
+{% extends 'bases/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&display=swap"
+    rel="stylesheet">
+<style>
+    body {
+        font-family: "Outfit", sans-serif;
+    }
+
+
+    .Htext {
+        color: rgb(65, 65, 65);
+        font-size: 80px;
+    }
+
+    .formC {
+        display: grid;
+        background-color: white;
+        width: 500px;
+        height: 500px;
+        border-radius: 40px;
+        justify-content: center;
+
+    }
+
+    .authInput {
+        border: 0px;
+        border-radius: 8px;
+        height: 50px;
+        width: 400px;
+        font-size: 25px;
+        background-color: white;
+        color: black;
+        padding-left: 20px;
+        margin-bottom: 40px;
+        border: 1px solid black;
+    }
+
+    .centered-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        max-width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+
+    @media (max-width: 580px) {
+        .Htext {
+            font-size: 55px;
+        }
+
+        .formC {
+            width: 100%;
+            height: auto;
+            background-color: transparent;
+            align-content: center;
+
+        }
+
+        .centered-container {
+            display: grid;
+            justify-content: center;
+            justify-items: center;
+            align-content: center;
+        }
+
+        .authInput {
+            border: 0px;
+            border-radius: 8px;
+            height: 50px;
+            width: auto;
+            font-size: 25px;
+            background-color: white;
+            color: black;
+            padding-left: 1;
+            margin-bottom: 40px;
+            border: 1px solid black;
+
+        }
+
+    }
+
+    @media (min-width: 580px) {
+        .formC {
+            box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+            -webkit-box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+            -moz-box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+        }
+    }
+
+
+    @media (min-width: 580px) {
+        .formC {
+            box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+            -webkit-box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+            -moz-box-shadow: -11px 14px 16px -9px rgba(0, 0, 0, 0.67);
+            align-content: space-between;
+        }
+
+        .FormEC {
+            margin-top: 115px;
+        }
+
+        .FeText {
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1000px) {
+            .formC {
+                margin-bottom: 40px;
+            }
+        }
+    }
+
+    @media (min-width: 1000px) {
+        .Htext {
+            font-size: 100px;
+        }
+
+        .centered-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            height: 100vh;
+        }
+
+    }
+
+    .Button {
+        background-color: rgb(27, 27, 27);
+        border-radius: 8px;
+        color: white;
+        height: 50px;
+        margin-top: 15px;
+        font-size: 20px;
+    }
+
+    .Button:hover {
+        background-color: black;
+        cursor: pointer;
+    }
+</style>
+<style>
+    .alert {
+        padding: 20px;
+        background-color: #f44336;
+        color: white;
+    }
+
+    .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .closebtn:hover {
+        color: black;
+    }
+</style>
+<script>
+    function SignUp() {
+        window.location.href = "/signup";
+    }
+
+    window.onload = function () {
+        var alert = document.getElementById("alert");
+
+        if (alert.style.display != "none") {
+            var h = alert.offsetHeight;
+
+            var c = document.getElementById("c");
+            if (c) {
+                c.style.height = `calc(100vh - ${h}px)`;
+            }
+        }
+    };
+
+    function closeA() {
+        var alert = document.getElementById("alert");
+        alert.style.display = "none";
+
+        var c = document.getElementById("c");
+        if (c) {
+            c.style.height = `100vh`;
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+{% if error != "" %}
+<div class="alert" id="alert">
+    <span class="closebtn" onclick="closeA()">&times;</span>
+    {{ error }}
+</div>
+{% else %}
+<div class="alert" id="alert" style="display: none;">
+    <span class="closebtn" onclick="closeA()">&times;</span>
+</div>
+{% endif %}
+<div class="centered-container" id="c">
+
+    <h1 class="Htext">Login</h1>
+
+
+
+    <div class="formC">
+        <form method="post" style="display: grid;" class="FormEC">
+            {% csrf_token %}
+            <input type="text" class="authInput" placeholder="Username" name="username">
+            <input type="password" class="authInput" placeholder="Password" name="password">
+
+            <button type="submit" class="Button">Login</button>
+        </form>
+        <span style="margin-top: 30px;" class="FeText" onclick="SignUp()">Don't have an account? <span
+                style="color: blue; cursor: pointer;">Sign
+                up</span></span>
+    </div>
+
+
+</div>
+{% endblock %}

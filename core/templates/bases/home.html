@@ -1,0 +1,127 @@
+{% extends 'bases/base.html' %}
+
+
+{% block title %}{% endblock %}
+
+{% block head %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&display=swap"
+    rel="stylesheet">
+<style>
+    body {
+        margin: 0 0 0 0;
+        font-family: "Outfit", sans-serif;
+        overflow: hidden;
+    }
+
+
+    .sidebar {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        height: 100%;
+        overflow: auto;
+        align-content: space-evenly;
+    }
+
+    .NavIcon {
+        filter: brightness(40%);
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .NavIcon:hover {
+        filter: brightness(0%);
+        cursor: pointer;
+    }
+
+    .NavCurrentIcon {
+        filter: brightness(0%);
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .NavCurrentIcon:hover {
+        cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+        .sidebar {
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            width: 100vw;
+            height: 45px;
+            margin-top: 20px;
+        }
+
+        .screen {
+            position: relative;
+            height: calc(100vh - 60px);
+            width: 100vw;
+            top: 10px;
+        }
+    }
+
+    @media (min-width: 600px) {
+        .sidebar {
+            position: fixed;
+            display: grid;
+            width: 40px;
+            margin-left: 10px;
+        }
+
+        .screen {
+            position: relative;
+            left: 60px;
+            height: 100vh;
+            width: calc(100vw - 60px);
+        }
+
+    }
+</style>
+{% block screenHead %}
+{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="sidebar">
+        {% if request.path == "/" %}
+        <img src="/static/icons/home/1.svg" alt="Home" class="NavCurrentIcon" onclick="window.location.href = '/'" />
+        {% else %}
+        <img src="/static/icons/home/0.svg" alt="Home" class="NavIcon" onclick="window.location.href = '/'" />
+        {% endif %}
+
+        {% if request.path|cut:"8" == "/addpost" %}
+        <img src="/static/icons/add/1.svg" alt="Add post" class="NavCurrentIcon"
+            onclick="window.location.href = '/addpost'" />
+        {% else %}
+        <img src="/static/icons/add/0.svg" alt="Add post" class="NavIcon" onclick="window.location.href = '/addpost'" />
+        {% endif %}
+        {% if request.path|cut:"8" == "/account" %}
+        <img src="/static/icons/person/1.svg" alt="Account" class="NavCurrentIcon"
+            onclick="window.location.href = '/account'" />
+        {% else %}
+        <img src="/static/icons/person/0.svg" alt="Account" class="NavIcon"
+            onclick="window.location.href = '/account'" />
+        {% endif %}
+
+        <img src="/static/icons/logout/0.svg" alt="Log out" class="NavIcon"
+            onclick="window.location.href = '/logout'" />
+    </div>
+
+    <div class="screen screenAdj">
+        {% block screen %}{% endblock %}
+    </div>
+</div>
+{% endblock %}
