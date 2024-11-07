@@ -1,2 +1,8 @@
 /.vscode
 /db.sqlite3
+*/__pycache__
+
+*.pyc
+*.pyc
+*.pyo
+*.pyd
