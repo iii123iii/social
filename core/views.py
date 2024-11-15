@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from .models import Post
 
 def index(request):
     if not request.user.is_authenticated:
@@ -14,7 +15,20 @@ def index(request):
 def addpost(request):
     if not request.user.is_authenticated:
         return redirect("/login")
-
+        
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        body = request.POST.get('body', '').strip()
+        
+        if title and body:
+            post = Post.objects.create(
+                user=request.user,
+                title=title,
+                body=body
+            )
+            post.save()
+            return redirect('/')
+        
     return render(request, "app/home.html")
 
 def login(request):
