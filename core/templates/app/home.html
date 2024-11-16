@@ -82,6 +82,9 @@
         color: #555;
         margin-bottom: 20px;
         overflow: hidden;
+        word-wrap: break-word;
+        max-height: 400px;
+        overflow-y: auto;
     }
 
     .dividerDiv {
@@ -262,166 +265,34 @@
 {% endblock %}
 
 {% block screen %}
-
 <div class="screenContainer">
-
     <div class="posts">
-
-
+        {% for post in posts %}
         <div class="post">
             <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
+                <span class="UserText">{{ post.user.username }}</span>
+                <span>{{ post.created_at|date:"F j, H:i" }}</span>
             </div>
             <div class="postTitle">
-                Title
+                {{ post.title }}
             </div>
             <div class="dividerDiv">
                 <div class="divider"></div>
             </div>
             <div class="postContent">
-                This is the content of the post.
+                {{ post.body }}
             </div>
         </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-        <div class="post">
-            <div class="postHeader">
-                <span class="UserText">User</span>
-                <span>November 1, 14:34</span>
-            </div>
-            <div class="postTitle">
-                Title
-            </div>
-            <div class="dividerDiv">
-                <div class="divider"></div>
-            </div>
-            <div class="postContent">
-                This is the content of the post.
-            </div>
-        </div>
-
-
-
+        {% endfor %}
     </div>
+
     <div class="addPost">
-        <div class="addPostI">
-            <input type="text" class="addPostInput" placeholder="Enter your post title">
-            <textarea class="textareaA" placeholder="Enter your post content"></textarea>
+        <form method="POST" action="/addpost" class="addPostI">
+            {% csrf_token %}
+            <input type="text" class="addPostInput" placeholder="Enter your post title" name="title">
+            <textarea class="textareaA" placeholder="Enter your post content" name="body"></textarea>
             <button class="buttonA">Post</button>
-        </div>
+        </form>
     </div>
 </div>
-
 {% endblock %}

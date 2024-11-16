@@ -8,14 +8,15 @@ from .models import Post
 def index(request):
     if not request.user.is_authenticated:
         return redirect("/login")
-
-    return render(request, "app/home.html")
+    
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, "app/home.html", {'posts': posts})
 
 
 def addpost(request):
     if not request.user.is_authenticated:
         return redirect("/login")
-        
+            
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
         body = request.POST.get('body', '').strip()
@@ -27,10 +28,9 @@ def addpost(request):
                 body=body
             )
             post.save()
-            return redirect('/')
+    
+    return redirect('/')
         
-    return render(request, "app/home.html")
-
 def login(request):
     if request.user.is_authenticated:
         return redirect("/")
