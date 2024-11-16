@@ -43,8 +43,8 @@ def login(request):
             if request.POST['username'].strip() != "" and request.POST['password'].strip() != "":
                 try:
                     user = authenticate(request, username = request.POST['username'], password = request.POST['password'])
-                    auth_login(request, user)
                     if user != None:
+                        auth_login(request, user)
                         return redirect("/")
                     else:
                         context['error'] = "The username or password you entered are incorrect"
