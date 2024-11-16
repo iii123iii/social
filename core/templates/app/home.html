@@ -209,53 +209,63 @@
         }
 
         .addPostI {
-            display: grid;
-            justify-content: space-around;
-        }
-
-        .addPostInput {
-            padding: 10px;
-        }
-
-        .addPostI {
-            display: grid;
-            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             width: 100%;
-            justify-content: center;
-            justify-items: center;
+            max-width: 400px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .addPostInput,
         .textareaA {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 320px;
-            border: black 1px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 4px;
-            height: 20px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .addPostInput:focus,
+        .textareaA:focus {
+            outline: none;
+            border-color: #2b4f7e;
+            box-shadow: 0 2px 8px rgba(43, 79, 126, 0.1);
         }
 
         .textareaA {
-            height: 260px;
+            height: 200px;
             resize: none;
-
+            line-height: 1.5;
         }
 
         .buttonA {
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             background-color: rgba(0, 0, 0, 0.9);
             color: white;
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            height: 40px;
-            width: 100%;
+            transition: all 0.2s ease;
         }
 
         .buttonA:hover {
             background-color: black;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .buttonA:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
 
@@ -291,7 +301,7 @@
             {% csrf_token %}
             <input type="text" class="addPostInput" placeholder="Enter your post title" name="title">
             <textarea class="textareaA" placeholder="Enter your post content" name="body"></textarea>
-            <button class="buttonA">Post</button>
+            <button class="buttonA">Create Post</button>
         </form>
     </div>
 </div>
