@@ -12,4 +12,9 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("addpost", views.addpost, name="Add post"),
     path("account", views.index, name="account"),
+
+
+
+    
+    path("beta", views.beta, name="beta"),
 ]

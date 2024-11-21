@@ -5,7 +5,7 @@
 {% block screenHead %}
 <style>
     .screenAdj {
-        overflow: hidden;
+        overflow: visible;
     }
 
     .screenContainer::-webkit-scrollbar {
@@ -16,24 +16,24 @@
         display: flex;
         justify-content: center;
         padding: 20px;
-        background-color: #f4f4f4;
         min-height: 95vh;
         overflow-y: scroll;
+        padding-left: 100px;
     }
 
     .posts {
         display: grid;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-height: 100%;
         box-sizing: border-box;
         -ms-overflow-style: none;
         scrollbar-width: none;
         justify-items: center;
-        align-content: stretch;
+        align-content: start;
         grid-gap: 45px;
+        padding-bottom: 20px;
     }
-
 
     .posts::-webkit-scrollbar {
         display: none;
@@ -42,7 +42,7 @@
     .post {
         background-color: #fff;
         border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 20px 6px 16px rgba(0, 0, 0, 0.06);
         width: 100%;
         max-width: 400px;
         padding: 20px;
@@ -51,10 +51,7 @@
         flex-direction: column;
         margin-bottom: 20px;
         color: #333;
-
     }
-
-
 
     .postHeader {
         display: flex;
@@ -74,6 +71,9 @@
         font-weight: 600;
         margin-bottom: 12px;
         color: #333;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 
     .postContent {
@@ -117,8 +117,6 @@
         font-size: 12px;
         color: #777;
     }
-
-
 
     @media (max-width: 650px) {
         .posts {
@@ -172,23 +170,27 @@
                 box-sizing: border-box;
                 padding-bottom: 10px;
             }
-
         }
     }
 
     .addPost {
-
         display: none;
     }
 
     .screenContainer {
         height: 95vh;
         padding: 30px;
-
     }
 
-
     @media (min-width: 920px) {
+        .screenContainer {
+            padding: 30px;
+            padding-left: 100px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 40px;
+        }
+
         .posts {
             justify-items: start;
             height: 96vh;
@@ -267,11 +269,341 @@
             transform: translateY(0);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
+    }
 
+    @keyframes slideFromSide {
+        from {
+            opacity: 0;
+            transform: translateX(-100px);
+            box-shadow: 20px 6px 16px rgba(0, 0, 0, 0.03);
+        }
 
+        to {
+            opacity: 1;
+            transform: translateX(0);
+            box-shadow: 20px 6px 16px rgba(0, 0, 0, 0.06);
+        }
+    }
 
+    .post-appear {
+        animation: slideFromSide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+    .pagination-link {
+        padding: 8px 16px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        color: #2b4f7e;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-link:hover {
+        background-color: #2b4f7e;
+        color: white;
+        box-shadow: 0 2px 8px rgba(43, 79, 126, 0.1);
+    }
+
+    .pagination-current {
+        color: #777;
+        font-size: 14px;
+    }
+
+    @media (max-width: 650px) {
+        .pagination {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pagination-link {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .loading {
+        text-align: center;
+        padding: 20px;
+        color: #777;
+        display: none;
+        grid-column: 1 / -1;
+    }
+
+    .error-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #ff4444;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        min-width: 300px;
+        opacity: 0;
+        transform: translateX(100px);
+        animation: slideIn 0.3s forwards;
+        overflow: hidden;
+    }
+
+    .error-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-bottom-left-radius: 8px;
+        animation: progress 5s linear forwards;
+    }
+
+    @keyframes progress {
+        from {
+            width: 100%;
+        }
+
+        to {
+            width: 0%;
+        }
+    }
+
+    @keyframes slideIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .error-message.fade-out {
+        animation: fadeOut 0.3s forwards;
+    }
+
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+    }
+
+    .character-count {
+        color: #777;
+        font-size: 12px;
+        text-align: right;
+        margin-top: 4px;
+    }
+
+    .character-count.warning {
+        color: #ff9800;
+    }
+
+    .character-count.error {
+        color: #ff4444;
     }
 </style>
+<script>
+    let currentPage = 1;
+    let loading = false;
+    let noMorePosts = false;
+
+    function createPostElement(post) {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post post-appear';
+        postDiv.innerHTML = `
+            <div class="postHeader">
+                <span class="UserText">${post.username}</span>
+                <span>${post.created_at}</span>
+            </div>
+            <div class="postTitle">
+                ${post.title}
+            </div>
+            <div class="dividerDiv">
+                <div class="divider"></div>
+            </div>
+            <div class="postContent">
+                ${post.body}
+            </div>
+        `;
+        return postDiv;
+    }
+
+    async function loadMorePosts() {
+        if (loading || noMorePosts) return;
+
+        loading = true;
+        const loadingEl = document.querySelector('.loading');
+        if (loadingEl) loadingEl.style.display = 'block';
+
+        try {
+            const response = await fetch(`/?page=${currentPage + 1}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            const data = await response.json();
+
+            if (!data.has_next) {
+                noMorePosts = true;
+                if (loadingEl) loadingEl.textContent = 'No more posts to load';
+                return;
+            }
+
+            const postsContainer = document.querySelector('.posts');
+            data.posts.forEach(post => {
+                const postElement = createPostElement(post);
+                postsContainer.appendChild(postElement);
+            });
+
+            currentPage++;
+
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        } finally {
+            loading = false;
+            if (loadingEl) loadingEl.style.display = 'none';
+        }
+    }
+
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            ${message}
+            <div class="error-progress"></div>
+        `;
+        document.body.appendChild(errorDiv);
+
+        setTimeout(() => {
+            errorDiv.classList.add('fade-out');
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 300);
+        }, 4700);
+    }
+
+    function updateCharCount(input, limit, countElement) {
+        const remaining = limit - input.value.length;
+
+        countElement.classList.remove('warning', 'error');
+
+        if (remaining <= 20) {
+            countElement.classList.add('error');
+        } else if (remaining <= 50) {
+            countElement.classList.add('warning');
+        }
+
+        countElement.textContent = `${remaining} characters remaining`;
+    }
+
+    async function submitPost(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const title = formData.get('title');
+        const body = formData.get('body');
+
+        if (title.length > 200) {
+            showError('Title must be less than 200 characters');
+            return;
+        }
+
+        if (body.length > 10000) {
+            showError('Content must be less than 10000 characters');
+            return;
+        }
+
+        if (!title.trim() || !body.trim()) {
+            showError('Please fill in all fields');
+            return;
+        }
+
+        try {
+            const response = await fetch('/addpost', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                const postDiv = createPostElement(data);
+                const postsContainer = document.querySelector('.posts');
+                if (postsContainer.firstChild) {
+                    postsContainer.insertBefore(postDiv, postsContainer.firstChild);
+                } else {
+                    postsContainer.appendChild(postDiv);
+                }
+
+                form.reset();
+                setTimeout(() => {
+                    postDiv.classList.remove('post-appear');
+                }, 400);
+            } else if (data.error) {
+                showError(data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showError('An error occurred while creating the post');
+        }
+    }
+
+    function checkScroll() {
+        const postsContainer = document.querySelector('.posts');
+        if (!postsContainer) return;
+
+        const scrollPosition = postsContainer.scrollTop + postsContainer.clientHeight;
+        const scrollHeight = postsContainer.scrollHeight;
+
+        if (scrollPosition > scrollHeight * 0.8 && !loading && !noMorePosts) {
+            loadMorePosts();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const postsContainer = document.querySelector('.posts');
+        if (postsContainer) {
+            postsContainer.addEventListener('scroll', checkScroll);
+
+            const loadingEl = document.createElement('div');
+            loadingEl.className = 'loading';
+            loadingEl.textContent = 'Loading more posts...';
+            postsContainer.appendChild(loadingEl);
+        }
+
+        const titleInput = document.querySelector('.addPostInput');
+        const bodyInput = document.querySelector('.textareaA');
+
+        if (titleInput && bodyInput) {
+            const titleCount = document.createElement('div');
+            titleCount.className = 'character-count';
+            titleInput.parentNode.insertBefore(titleCount, titleInput.nextSibling);
+
+            const bodyCount = document.createElement('div');
+            bodyCount.className = 'character-count';
+            bodyInput.parentNode.insertBefore(bodyCount, bodyInput.nextSibling);
+
+            titleInput.addEventListener('input', () => updateCharCount(titleInput, 200, titleCount));
+            bodyInput.addEventListener('input', () => updateCharCount(bodyInput, 10000, bodyCount));
+
+            updateCharCount(titleInput, 200, titleCount);
+            updateCharCount(bodyInput, 10000, bodyCount);
+        }
+    });
+</script>
 {% endblock %}
 
 {% block screen %}
@@ -297,7 +629,7 @@
     </div>
 
     <div class="addPost">
-        <form method="POST" action="/addpost" class="addPostI">
+        <form onsubmit="submitPost(event)" class="addPostI">
             {% csrf_token %}
             <input type="text" class="addPostInput" placeholder="Enter your post title" name="title">
             <textarea class="textareaA" placeholder="Enter your post content" name="body"></textarea>
