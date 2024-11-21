@@ -354,8 +354,8 @@
         min-width: 300px;
         opacity: 0;
         transform: translateX(100px);
-        animation: slideIn 0.3s forwards;
         overflow: hidden;
+        pointer-events: auto;
     }
 
     .error-progress {
@@ -366,7 +366,7 @@
         width: 100%;
         background-color: rgba(255, 255, 255, 0.7);
         border-bottom-left-radius: 8px;
-        animation: progress 5s linear forwards;
+        animation: progress 4.7s linear forwards;
     }
 
     @keyframes progress {
@@ -391,6 +391,11 @@
     }
 
     @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         to {
             opacity: 0;
             transform: translateX(100px);
@@ -410,6 +415,17 @@
 
     .character-count.error {
         color: #ff4444;
+    }
+
+    .notifications-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+        pointer-events: none;
     }
 </style>
 <script>
@@ -476,18 +492,42 @@
     }
 
     function showError(message) {
+        let container = document.querySelector('.notifications-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'notifications-container';
+            document.body.appendChild(container);
+        }
+
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `
             ${message}
             <div class="error-progress"></div>
         `;
-        document.body.appendChild(errorDiv);
+
+        const existingNotifications = container.children.length;
+        errorDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
+        container.appendChild(errorDiv);
+
+        errorDiv.offsetHeight;
+
+        errorDiv.style.transition = 'all 0.3s ease';
+        errorDiv.style.transform = `translateX(0) translateY(${existingNotifications * 70}px)`;
+        errorDiv.style.opacity = '1';
 
         setTimeout(() => {
-            errorDiv.classList.add('fade-out');
+            errorDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
+            errorDiv.style.opacity = '0';
+
             setTimeout(() => {
                 errorDiv.remove();
+                Array.from(container.children).forEach((notification, index) => {
+                    notification.style.transform = `translateX(0) translateY(${index * 70}px)`;
+                });
+                if (container.children.length === 0) {
+                    container.remove();
+                }
             }, 300);
         }, 4700);
     }
