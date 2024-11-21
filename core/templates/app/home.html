@@ -275,18 +275,30 @@
         from {
             opacity: 0;
             transform: translateX(-100px);
-            box-shadow: 20px 6px 16px rgba(0, 0, 0, 0.03);
         }
 
         to {
             opacity: 1;
             transform: translateX(0);
-            box-shadow: 20px 6px 16px rgba(0, 0, 0, 0.06);
+        }
+    }
+
+    @keyframes slideDown {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(65px);
         }
     }
 
     .post-appear {
-        animation: slideFromSide 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: slideFromSide 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .post-slide-down {
+        animation: slideDown 0.3s ease-out forwards;
     }
 
     .pagination {
@@ -427,15 +439,63 @@
         z-index: 1000;
         pointer-events: none;
     }
+
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        min-width: 300px;
+        opacity: 0;
+        transform: translateX(100px);
+        overflow: hidden;
+        pointer-events: auto;
+    }
+
+    .notification.error {
+        background-color: #ff4444;
+        color: white;
+    }
+
+    .notification.success {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: 100%;
+        border-bottom-left-radius: 8px;
+        animation: progress 4.7s linear forwards;
+    }
+
+    .notification.error .notification-progress {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .notification.success .notification-progress {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 </style>
 <script>
     let currentPage = 1;
     let loading = false;
     let noMorePosts = false;
 
-    function createPostElement(post) {
+    function createPostElement(post, animate = false) {
         const postDiv = document.createElement('div');
-        postDiv.className = 'post post-appear';
+        postDiv.className = 'post';
+        if (animate) {
+            postDiv.classList.add('post-appear');
+        }
         postDiv.innerHTML = `
             <div class="postHeader">
                 <span class="UserText">${post.username}</span>
@@ -477,7 +537,7 @@
 
             const postsContainer = document.querySelector('.posts');
             data.posts.forEach(post => {
-                const postElement = createPostElement(post);
+                const postElement = createPostElement(post, false);
                 postsContainer.appendChild(postElement);
             });
 
@@ -491,7 +551,7 @@
         }
     }
 
-    function showError(message) {
+    function showNotification(message, type = 'error') {
         let container = document.querySelector('.notifications-container');
         if (!container) {
             container = document.createElement('div');
@@ -499,29 +559,29 @@
             document.body.appendChild(container);
         }
 
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = `notification ${type}`;
+        notificationDiv.innerHTML = `
             ${message}
-            <div class="error-progress"></div>
+            <div class="notification-progress"></div>
         `;
 
         const existingNotifications = container.children.length;
-        errorDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
-        container.appendChild(errorDiv);
+        notificationDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
+        container.appendChild(notificationDiv);
 
-        errorDiv.offsetHeight;
+        notificationDiv.offsetHeight;
 
-        errorDiv.style.transition = 'all 0.3s ease';
-        errorDiv.style.transform = `translateX(0) translateY(${existingNotifications * 70}px)`;
-        errorDiv.style.opacity = '1';
+        notificationDiv.style.transition = 'all 0.3s ease';
+        notificationDiv.style.transform = `translateX(0) translateY(${existingNotifications * 70}px)`;
+        notificationDiv.style.opacity = '1';
 
         setTimeout(() => {
-            errorDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
-            errorDiv.style.opacity = '0';
+            notificationDiv.style.transform = `translateX(100px) translateY(${existingNotifications * 70}px)`;
+            notificationDiv.style.opacity = '0';
 
             setTimeout(() => {
-                errorDiv.remove();
+                notificationDiv.remove();
                 Array.from(container.children).forEach((notification, index) => {
                     notification.style.transform = `translateX(0) translateY(${index * 70}px)`;
                 });
@@ -554,17 +614,17 @@
         const body = formData.get('body');
 
         if (title.length > 200) {
-            showError('Title must be less than 200 characters');
+            showNotification('Title must be less than 200 characters', 'error');
             return;
         }
 
         if (body.length > 10000) {
-            showError('Content must be less than 10000 characters');
+            showNotification('Content must be less than 10000 characters', 'error');
             return;
         }
 
         if (!title.trim() || !body.trim()) {
-            showError('Please fill in all fields');
+            showNotification('Please fill in all fields', 'error');
             return;
         }
 
@@ -580,8 +640,9 @@
             const data = await response.json();
 
             if (data.success) {
-                const postDiv = createPostElement(data);
                 const postsContainer = document.querySelector('.posts');
+                const postDiv = createPostElement(data, true);
+
                 if (postsContainer.firstChild) {
                     postsContainer.insertBefore(postDiv, postsContainer.firstChild);
                 } else {
@@ -589,15 +650,18 @@
                 }
 
                 form.reset();
-                setTimeout(() => {
-                    postDiv.classList.remove('post-appear');
-                }, 400);
+                const titleCount = form.querySelector('.character-count');
+                const bodyCount = form.querySelectorAll('.character-count')[1];
+                updateCharCount(form.querySelector('.addPostInput'), 200, titleCount);
+                updateCharCount(form.querySelector('.textareaA'), 10000, bodyCount);
+
+                showNotification('Post created successfully!', 'success');
             } else if (data.error) {
-                showError(data.error);
+                showNotification(data.error, 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            showError('An error occurred while creating the post');
+            showNotification('An error occurred while creating the post', 'error');
         }
     }
 
