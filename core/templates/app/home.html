@@ -343,14 +343,6 @@
         }
     }
 
-    .loading {
-        text-align: center;
-        padding: 20px;
-        color: #777;
-        display: none;
-        grid-column: 1 / -1;
-    }
-
     .error-message {
         position: fixed;
         top: 20px;
@@ -518,8 +510,6 @@
         if (loading || noMorePosts) return;
 
         loading = true;
-        const loadingEl = document.querySelector('.loading');
-        if (loadingEl) loadingEl.style.display = 'block';
 
         try {
             const response = await fetch(`/?page=${currentPage + 1}`, {
@@ -531,7 +521,6 @@
 
             if (!data.has_next) {
                 noMorePosts = true;
-                if (loadingEl) loadingEl.textContent = 'No more posts to load';
                 return;
             }
 
@@ -547,7 +536,6 @@
             console.error('Error loading posts:', error);
         } finally {
             loading = false;
-            if (loadingEl) loadingEl.style.display = 'none';
         }
     }
 
@@ -681,11 +669,6 @@
         const postsContainer = document.querySelector('.posts');
         if (postsContainer) {
             postsContainer.addEventListener('scroll', checkScroll);
-
-            const loadingEl = document.createElement('div');
-            loadingEl.className = 'loading';
-            loadingEl.textContent = 'Loading more posts...';
-            postsContainer.appendChild(loadingEl);
         }
 
         const titleInput = document.querySelector('.addPostInput');
